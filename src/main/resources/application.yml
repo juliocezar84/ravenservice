@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: RavenService
+  jackson:
+    serialization:
+      indent_output: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - '*'
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+resilience4j:
+  circuitbreaker:
+    instances:
+      playerCircuitBreaker:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 120s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+        slowCallRateThreshold: 10
+        slowCallDurationThreshold: 500
+parameters:
+  apiUrl: https://americas.api.riotgames.com
+  playerUrl: /riot/account/v1/accounts/by-puuid/{puuid}?api_key={apiToken}
+  matchesUrl: /lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=100&api_key={apiToken}
+  matchDetail: /lol/match/v5/matches/{matchId}
