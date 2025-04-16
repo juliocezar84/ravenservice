@@ -1,18 +1,30 @@
+networks:
+  aw-network:
+    driver: bridge
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
 services:
   prometheus:
-    image: prom/prometheus:v2.44.0
+    image: prom/prometheus:latest
     container_name: prometheus
+    networks:
+      - aw-network
     ports:
-      - "9090:9090"
+      - 9090:9090
     volumes:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
 
   grafana:
-    image: grafana/grafana:9.5.2
+    image: grafana/grafana:latest
     container_name: grafana
+    networks:
+      - aw-network
     ports:
-      - "3000:3000"
-    restart: unless-stopped
+      - 3000:3000
     volumes:
       - ./monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
 

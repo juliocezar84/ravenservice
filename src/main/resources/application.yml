@@ -17,13 +17,16 @@ spring:
       path: /h2-console
 management:
   endpoints:
+    enabled-by-default: false
     web:
       exposure:
-        include:
-          - '*'
+        include: 'health,prometheus'
   endpoint:
     health:
+      enabled: true
       show-details: always
+    prometheus:
+      enabled: true
   health:
     circuitbreakers:
       enabled: true
@@ -36,11 +39,12 @@ resilience4j:
         minimumNumberOfCalls: 5
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
-        waitDurationInOpenState: 120s
+        waitDurationInOpenState: 30s
         failureRateThreshold: 50
         eventConsumerBufferSize: 10
         slowCallRateThreshold: 10
         slowCallDurationThreshold: 500
+        ignoreExceptions: org.springframework.web.client.HttpClientErrorException.Forbidden
 parameters:
   apiUrl: https://americas.api.riotgames.com
   playerUrl: /riot/account/v1/accounts/by-puuid/{puuid}?api_key={apiToken}

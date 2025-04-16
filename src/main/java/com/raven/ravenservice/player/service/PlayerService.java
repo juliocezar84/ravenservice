@@ -29,7 +29,7 @@ public class PlayerService {
             info = restTemplate.getForObject(url, Object.class);
         } catch (Exception e) {
             logger.error(String.valueOf(e));
-            throw new Exception("Failed to fetch info from the API");
+            throw e;
         }
         return info;
     }
